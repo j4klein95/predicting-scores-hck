@@ -142,3 +142,4 @@ cython_debug/
 # Gecko logs
 geckodriver.log
 
+data/
