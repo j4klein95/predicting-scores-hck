@@ -143,3 +143,4 @@ cython_debug/
 geckodriver.log
 
 data/
+proj_tracker.md
