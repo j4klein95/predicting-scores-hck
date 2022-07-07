@@ -18,4 +18,6 @@
 * Python 3.10
 * Selenium Web Driver
 * Pandas
+* Bokeh (for storytelling notebook)
+* Ipywidgets
 * Written for FireFox, use the *[Gecko Driver](https://github.com/mozilla/geckodriver/releases)*. If you do not want to use Firefox, rewrite data_scraper.py. Follow install instructions for your web driver.
