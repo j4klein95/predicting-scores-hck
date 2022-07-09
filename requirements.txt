@@ -2,3 +2,4 @@ selenium==4.2.0
 pandas==1.4.2
 bokeh==2.4.2
 ipywidgets
+constructs~=10.1.43
