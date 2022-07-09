@@ -2,7 +2,9 @@ from aws_cdk import (
     # Duration,
     Stack,
     aws_kms as kms,
-    aws_s3 as s3
+    aws_s3 as s3,
+    RemovalPolicy,
+    aws_lambda as lambda_
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -20,5 +22,4 @@ class AwsStack(Stack):
                            removal_policy=RemovalPolicy.DESTROY)
 
         # lambda to run the scraper
-
-
+        lambda_.DockerImageFunction()

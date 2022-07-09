@@ -6,8 +6,8 @@
 ## Repository Format
 
 ```bash
-├───aws
-│   ├───aws
+├───cdk
+│   ├───cdk
 │   └───tests
 │       └───unit
 ├───data
