@@ -1,0 +1,27 @@
+# Dockerfile
+FROM public.ecr.aws/lambda/python:3.9
+
+RUN yum install -y \
+    Xvfb \
+    wget \
+    unzip
+
+# Install google-chrome-stable
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm && \
+    yum localinstall -y google-chrome-stable_current_x86_64.rpm
+
+# Install chromedriver
+RUN wget https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && \
+    chmod 775 chromedriver
+
+# Install selenium
+COPY lambda_reqs.txt
+RUN pip install -r lambda_reqs.txt
+
+# Copy lambda's main script
+COPY app.py .
+
+CMD ["app.lambda_handler"]
+
+# Borrowed from https://dev.to/adelmofilho42/web-scraping-with-python-and-aws-lambda-a-modern-approach-1iok
