@@ -1,27 +1,51 @@
 # Dockerfile
-FROM public.ecr.aws/lambda/python:3.9
-
+#FROM public.ecr.aws/lambda/python:3.9
+FROM amazonlinux
+RUN yum update -y
 RUN yum install -y \
     Xvfb \
     wget \
-    unzip
+    python3 \
+    python3-pip \
+    git \
+    gtk3\
+    dbus-glib\
+    unzip \
+    gcc \
+    openssl-devel \
+    zlib-devel \
+    libffi-devel \
+    wget && \
+    yum -y clean all
+RUN yum -y groupinstall development
 
-# Install google-chrome-stable
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm && \
-    yum localinstall -y google-chrome-stable_current_x86_64.rpm
+WORKDIR /opt
 
-# Install chromedriver
-RUN wget https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip && \
-    unzip chromedriver_linux64.zip && \
-    chmod 775 chromedriver
+RUN wget -O- "https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en-US" | tar -jx -C /usr/local/
+
+# Borrowed from here: https://github.com/aws-samples/container-web-scraper-example/blob/master/code/Dockerfile
+RUN ln -s /usr/local/firefox/firefox /usr/bin/firefox
 
 # Install selenium
 COPY lambda_reqs.txt .
 RUN pip3 install -r lambda_reqs.txt
 
-# Copy lambda's main script
-COPY app.py .
+RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-linux64.tar.gz
+RUN tar -xf geckodriver-v0.31.0-linux64.tar.gz
+RUN ls -lta
+RUN rm geckodriver-v0.31.0-linux64.tar.gz
 
-CMD ["app.lambda_handler"]
+RUN chmod +x geckodriver
+RUN export DISPLAY=:99
+
+COPY run.sh /opt/run.sh
+COPY app.py /opt/app.py
+RUN chmod +x /opt/run.sh
+ENTRYPOINT ["/opt/run.sh", "--no-save"]
+
+# Copy lambda's main script
+# COPY app.py .
+#
+# CMD ["app.lambda_handler"]
 
 # Borrowed from https://dev.to/adelmofilho42/web-scraping-with-python-and-aws-lambda-a-modern-approach-1iok

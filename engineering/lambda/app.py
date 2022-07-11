@@ -7,14 +7,14 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
 
 import pandas as pd
 
-chromeOptions = webdriver.ChromeOptions()
-chromeOptions.add_argument("--headless")
-chromeOptions.add_argument("--remote-debugging-port=9222")
-chromeOptions.add_argument('--no-sandbox')
-driver = webdriver.Chrome('/var/task/chromedriver', chrome_options=chromeOptions)
+options = Options()
+options.headless = True
+
+driver = webdriver.Firefox(options=options, executable_path='/opt/geckodriver')
 
 
 def lambda_handler(event, context):
