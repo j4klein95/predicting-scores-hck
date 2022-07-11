@@ -16,8 +16,8 @@ RUN wget https://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.z
     chmod 775 chromedriver
 
 # Install selenium
-COPY lambda_reqs.txt
-RUN pip install -r lambda_reqs.txt
+COPY lambda_reqs.txt .
+RUN pip3 install -r lambda_reqs.txt
 
 # Copy lambda's main script
 COPY app.py .
