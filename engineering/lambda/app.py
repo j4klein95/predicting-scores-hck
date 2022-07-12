@@ -13,7 +13,6 @@ import pandas as pd
 
 options = Options()
 options.headless = True
-
 driver = webdriver.Firefox(options=options, executable_path='/opt/geckodriver')
 
 
