@@ -14,6 +14,7 @@ from selenium.webdriver.common.by import By
 import pandas as pd
 
 options = Options()
+options.binary_location = './headless-chromium'
 options.add_argument('--headless')
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
