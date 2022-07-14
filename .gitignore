@@ -143,7 +143,9 @@ cython_debug/
 # Gecko logs
 geckodriver.log
 
-data/
+data
 proj_tracker.md
 
-cdk.out/
+cdk.out
+engineering/delete2.py
+engineering/lambda/delete.py

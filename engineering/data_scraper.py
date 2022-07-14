@@ -3,11 +3,15 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
 
 import pandas as pd
 
 # Re-write this line to use your own browser driver.
-driver = webdriver.Firefox()
+options = Options()
+options.headless = True
+options.add_argument("--no-sandbox")
+driver = webdriver.Firefox(executable_path="D:\\gecko\\geckodriver.exe", options=options)
 
 driver.get("https://www.hockey-reference.com/")
 
