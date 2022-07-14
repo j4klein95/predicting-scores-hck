@@ -6,19 +6,19 @@ RUN yum install -y \
     Xvfb \
     wget \
     gtk3\
-    dbus-glib\
+#     dbus-glib\
     unzip \
-    gcc \
-    openssl-devel \
-    zlib-devel \
-    libffi-devel \
-    libgtk-3-0 \
-    alsa-lib-devel \
+#     gcc \
+#     openssl-devel \
+#     zlib-devel \
+#     libffi-devel \
+     libgtk-3-0 \
+#     alsa-lib-devel \
     # I think needed for pandas
     libxml2 \
     libxml2-devel \
     g++ \
-    python-dev \
+#     python-dev \
     yum -y clean all
 RUN yum -y groupinstall development
 

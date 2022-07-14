@@ -145,3 +145,5 @@ geckodriver.log
 
 data/
 proj_tracker.md
+
+cdk.out/

@@ -1,6 +1,8 @@
 # app.py
+import os
+
 import boto3
-import botocore
+from io import StringIO
 
 from selenium import webdriver
 from selenium.webdriver import ActionChains
@@ -13,7 +15,8 @@ import pandas as pd
 
 options = Options()
 options.headless = True
-driver = webdriver.Firefox(options=options, executable_path='/opt/geckodriver')
+options.add_argument("--no-sandbox")
+driver = webdriver.Firefox(options=options, executable_path='/opt/geckodriver', log_path='/dev/null')
 
 
 def lambda_handler(event, context):
@@ -42,7 +45,12 @@ def lambda_handler(event, context):
     # Make sure we are using player totals instead of stats per team if they were moved mid-season
     df = df.drop_duplicates(subset=['Player'], keep='first', ignore_index=True)
 
-    df.to_csv("scores.csv")
+    # Write scores to s3
+    csv_buffer = StringIO()
+    df.to_csv(csv_buffer)
+
+    s3_resource = boto3.resource('s3')
+    s3_resource.Object(os.environ['bucket'], 'scores.csv').put(Body=csv_buffer.getvalue())
 
     selection_bar = driver.find_element(By.CSS_SELECTOR, "li.full:nth-child(6) > a:nth-child(1)")
     actions.move_to_element(selection_bar).perform()
@@ -57,6 +65,9 @@ def lambda_handler(event, context):
 
     as_df = as_df.drop_duplicates(subset=['Player'], keep='first', ignore_index=True)
 
-    as_df.to_csv("advanced_stats.csv")
+    as_df.to_csv(csv_buffer)
+
+    s3_resource = boto3.resource('s3')
+    s3_resource.Object(os.environ['bucket'], 'advanced_stats.csv').put(Body=csv_buffer.getvalue())
 
     driver.quit()
