@@ -1,5 +1,5 @@
 # Dockerfile
-FROM public.ecr.aws/lambda/python:3.9
+FROM public.ecr.aws/lambda/python:3.8
 
 RUN yum update -y
 RUN yum install -y \
@@ -13,31 +13,23 @@ RUN yum install -y \
     libxml2 \
     libxml2-devel \
     g++ \
-    vim \
     yum -y clean all
 RUN yum -y groupinstall development
 
-ENV GOOGLE_CHROME_VERSION=81.0.4044.138
-
-# RUN wget https://dl.google.com/linux/direct/google-chrome-stable_${GOOGLE_CHROME_VERSION}_x86_64.rpm && \
-#     yum localinstall -y google-chrome-stable_current_x86_64.rpm
-
-RUN wget https://chromedriver.storage.googleapis.com/81.0.4044.138/chromedriver_linux64.zip
+RUN wget https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip
 RUN unzip chromedriver_linux64.zip chromedriver -d /usr/local/bin
 
-# RUN curl -SL https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-57/stable-headless-chromium-amazonlinux-2.zip > headless-chromium.zip
-# RUN unzip headless-chromium.zip
-# RUN rm *.zip
-
-ENV DISPLAY=:99
+RUN curl -SL https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-57/stable-headless-chromium-amazonlinux-2.zip > headless-chromium.zip
+RUN unzip headless-chromium.zip
+RUN rm *.zip
 
 # Install selenium
 COPY lambda_reqs.txt .
 RUN pip install --upgrade pip
 RUN pip install -r lambda_reqs.txt
 
+
 # Copy lambda's main script
 COPY app.py .
-copy delete.py .
 
 CMD ["app.lambda_handler"]

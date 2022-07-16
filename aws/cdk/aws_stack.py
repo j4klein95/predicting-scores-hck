@@ -32,5 +32,6 @@ class AwsStack(Stack):
                                     function_name='predicting-scores-hcky-scraping-lambda',
                                     environment={"bucket": bucket.bucket_name},
                                     timeout=aws_cdk.Duration.seconds(300),
-                                    memory_size=256
+                                    memory_size=5000,
+                                    ephemeral_storage_size=aws_cdk.Size.mebibytes(512),
                                     )
