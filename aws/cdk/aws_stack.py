@@ -4,9 +4,11 @@ from aws_cdk import (
     aws_kms as kms,
     aws_s3 as s3,
     RemovalPolicy,
-    aws_lambda as lambda_,
+    aws_lambda as lambda_
 )
 from constructs import Construct
+
+from .iam_helpers import get_s3_write_policy
 
 
 class AwsStack(Stack):
@@ -16,7 +18,6 @@ class AwsStack(Stack):
                  construct_id: str,
                  bucket_name: str,
                  **kwargs) -> None:
-
         super().__init__(scope, construct_id, **kwargs)
 
         encryption_key = kms.Key(self, 'Key', enable_key_rotation=True)
@@ -26,12 +27,15 @@ class AwsStack(Stack):
                            removal_policy=RemovalPolicy.DESTROY, bucket_name=bucket_name)
 
         # lambda to run the scraper
-        lambda_.DockerImageFunction(self,
-                                    'jk-app-cloud-stats-scraper-lambda',
-                                    code=lambda_.DockerImageCode.from_image_asset('../engineering/lambda'),
-                                    function_name='predicting-scores-hcky-scraping-lambda',
-                                    environment={"bucket": bucket.bucket_name},
-                                    timeout=aws_cdk.Duration.seconds(300),
-                                    memory_size=5000,
-                                    ephemeral_storage_size=aws_cdk.Size.mebibytes(512),
-                                    )
+        basic_stats_lambda = lambda_.DockerImageFunction(self,
+                                                         'basic-stats-scraper-lambda',
+                                                         code=lambda_.DockerImageCode.from_image_asset(
+                                                             '../engineering/basic-stats-lambda'),
+                                                         function_name='hcky-basic-stats-scraper-lambda',
+                                                         environment={"bucket": bucket.bucket_name},
+                                                         timeout=aws_cdk.Duration.seconds(300),
+                                                         memory_size=5000,
+                                                         ephemeral_storage_size=aws_cdk.Size.mebibytes(512),
+                                                         )
+
+        basic_stats_lambda.add_to_role_policy(get_s3_write_policy(bucket=bucket))
