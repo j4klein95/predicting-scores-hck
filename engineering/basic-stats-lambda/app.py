@@ -36,25 +36,31 @@ def lambda_handler(event, context):
     :return:
     """
 
+    logger.info("Getting driver to hockey-reference.")
     driver.get("https://www.hockey-reference.com/leagues/NHL_2022_skaters.html")
 
     scores_url = driver.current_url
     logger.info(scores_url)
 
+    logger.info("Attempting to read html table into dataframe.")
     df = pd.read_html(scores_url, index_col=0, header=1)[0]
 
     # Make sure we are using player totals instead of stats per team if they were moved mid-season
+    logger.info("Minor transformations.")
     df = df.drop_duplicates(subset=['Player'], keep='first', ignore_index=True)
 
     # Write scores to s3
+    logger.info("Writing dataframe to stringIO.")
     csv_buffer = StringIO()
     df.to_csv(csv_buffer)
 
+    logger.info("Attempting to write to s3 bucket.")
     s3_resource = boto3.resource('s3')
     s3_resource.Object(os.environ['bucket'], 'scores.csv').put(Body=csv_buffer.getvalue())
 
     driver.quit()
 
     return {
-        "fileKey": f'{os.environ["bucket"]}/scores.csv'
+        "fileKey": f'{os.environ["bucket"]}/scores.csv',
+        "status": "SUCCEEDED"
     }
