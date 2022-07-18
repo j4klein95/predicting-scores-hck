@@ -32,6 +32,6 @@
       "aws",
       "aws-cn"
     ],
-    "bucketName": "predict-scoring-stats-bucket-us-east-1"
+    "bucketName": "predict-scoring-stats2-bucket-us-east-1"
   }
 }

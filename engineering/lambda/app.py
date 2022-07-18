@@ -16,17 +16,12 @@ import pandas as pd
 
 executable_path = '/opt/geckodriver'
 
-service = Service(executable_path=executable_path, port=0, log_path=os.path.devnull)
-
 options = Options()
 options.headless = True
-options.add_argument("--no-sandbox")
-options.add_argument("--single-process")
-options.add_argument("--disable-dev-shm-usage")
 driver = webdriver.Firefox(options=options,
-                           executable_path=executable_path,
-                           service_log_path=os.path.devnull,
-                           service=service)
+                           executable_path='/opt/geckodriver',
+                           service_log_path=os.path.devnull
+                           )
 
 
 def lambda_handler(event, context):

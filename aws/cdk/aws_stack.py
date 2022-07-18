@@ -21,7 +21,7 @@ class AwsStack(Stack):
         encryption_key = kms.Key(self, 'Key', enable_key_rotation=True)
 
         # fix cdk.json to have the region
-        bucket = s3.Bucket(self, 'jk-app-cloud-stats-bucket-us-east-1', encryption_key=encryption_key,
+        bucket = s3.Bucket(self, 'jk-app-cloud-stats2-bucket-us-east-1', encryption_key=encryption_key,
                            removal_policy=RemovalPolicy.DESTROY, bucket_name=bucket_name)
 
         # lambda to run the scraper
