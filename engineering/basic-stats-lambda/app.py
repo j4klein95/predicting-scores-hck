@@ -56,11 +56,11 @@ def lambda_handler(event, context):
 
     logger.info("Attempting to write to s3 bucket.")
     s3_resource = boto3.resource('s3')
-    s3_resource.Object(os.environ['bucket'], 'scores.csv').put(Body=csv_buffer.getvalue())
+    s3_resource.Object(os.environ['bucket'], 'basic/scores.csv').put(Body=csv_buffer.getvalue())
 
     driver.quit()
 
     return {
-        "fileKey": f'{os.environ["bucket"]}/scores.csv',
+        "fileKey": f'{os.environ["bucket"]}/basic/scores.csv',
         "status": "SUCCEEDED"
     }
