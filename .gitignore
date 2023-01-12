@@ -149,3 +149,4 @@ proj_tracker.md
 cdk.out
 engineering/delete2.py
 engineering/lambda/delete.py
+*.pdf

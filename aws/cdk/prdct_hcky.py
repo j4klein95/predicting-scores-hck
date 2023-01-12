@@ -6,7 +6,8 @@ from aws_cdk import (
     RemovalPolicy,
     aws_lambda as lambda_,
     aws_stepfunctions as sfn,
-    aws_stepfunctions_tasks as tasks
+    aws_stepfunctions_tasks as tasks,
+    aws_glue as glue
 )
 from constructs import Construct
 
@@ -57,6 +58,19 @@ class PrdctHckyApp(Stack):
 
         encryption_key.grant_encrypt_decrypt(advanced_stats_lambda.role)
         advanced_stats_lambda.add_to_role_policy(get_s3_write_policy(bucket=bucket))
+
+        # Glue Crawler sets up my tables in Athena
+        # glue_crawler = glue.CfnCrawler(
+        #     self,
+        #     id="hcky-bucket-crawler",
+        #     role="some role ARN",
+        #     targets=glue.CfnCrawler.TargetsProperty(
+        #         glue.CfnCrawler.S3TargetProperty(
+        #             connection_name="",
+        #             path=""
+        #         )
+        #     )
+        # )
 
         # StepFunction - State Machine Definition
         basic_stats_job = tasks.LambdaInvoke(
